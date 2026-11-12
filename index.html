@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가게AI — 소상공인 AI 상담 챗봇 데모 (정적 프로토타입)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f6f6f4; color: #111; font-family: -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif; font-size: 16px; line-height: 1.6; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 20px 16px 48px; }
+  .badge { display: inline-block; background: #111; color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 999px; margin-bottom: 12px; }
+  h1 { font-size: 24px; line-height: 1.3; margin-bottom: 6px; }
+  p.sub { color: #555; margin-bottom: 16px; }
+  .card { background: #fff; border: 1px solid #e3e3e0; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+  .card h2 { font-size: 17px; margin-bottom: 6px; }
+  .card ul { padding-left: 18px; color: #333; }
+  .card li { margin-bottom: 4px; }
+  #chat { display: flex; flex-direction: column; gap: 8px; min-height: 180px; }
+  .msg { max-width: 85%; padding: 10px 12px; border-radius: 12px; font-size: 15px; }
+  .msg.bot { background: #eef4ff; align-self: flex-start; }
+  .msg.user { background: #111; color: #fff; align-self: flex-end; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip { border: 1px solid #111; background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 14px; cursor: pointer; }
+  .chip:hover { background: #111; color: #fff; }
+  .note { font-size: 13px; color: #777; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">정적 프로토타입 — 데모용 모의 응답</span>
+  <h1>가게AI — 소상공인 AI 상담 챗봇</h1>
+  <p class="sub">웹사이트 주소만 넣으면 완성되는 가게 전용 상담 챗봇. 아래는 가상 미용실 ‘하루헤어’ 예시로 동작하는 모의 데모입니다. 실제 AI 연결은 없으며, 모든 데이터는 가상 예시입니다.</p>
+
+  <div class="card">
+    <h2>이 챗봇이 대신 답하는 질문</h2>
+    <ul>
+      <li>가격이 얼마예요? — 메뉴·가격표 기준 자동 응답</li>
+      <li>예약 되나요? — 예약 안내·변경·취소 안내</li>
+      <li>위치가 어디예요? — 주소·영업시간·주차 안내</li>
+      <li>밤·주말 문의 — 다음 날까지 방치되지 않고 자동 수집</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>챗봇 데모 — 하루헤어 (가상 매장)</h2>
+    <div id="chat">
+      <div class="msg bot">안녕하세요! 하루헤어 상담 챗봇입니다. 가격·예약·위치에 대해 물어보세요. (모의 응답 데모입니다)</div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <p class="note">※ 이 데모는 미리 정해둔 답변만 보여주는 모의 화면입니다. 실제 AI가 답하는 것이 아닙니다. 가격·주소·영업시간은 모두 가상 예시입니다.</p>
+  </div>
+
+  <div class="card">
+    <h2>도입 절차 (예시)</h2>
+    <ul>
+      <li>1. 웹사이트 주소·가격표·영업시간 전달</li>
+      <li>2. 자주 묻는 질문 정리 (2~3일)</li>
+      <li>3. 테스트 링크 전달 → 검수</li>
+      <li>4. 홈페이지·카카오톡 채널에 삽입</li>
+    </ul>
+  </div>
+</div>
+<script>
+  var answers = {
+    "가격이 얼마예요?": "하루헤어 예시 가격표입니다. 컷트 20,000원, 염색 60,000원부터, 펌 70,000원부터입니다. (가상 예시 가격이며 실제 매장 가격이 아닙니다.)",
+    "예약 되나요?": "네, 예약 가능합니다. 원하시는 날짜·시간·시술을 알려주시면 예약 안내를 도와드립니다. 변경·취소도 여기서 안내해 드립니다. (모의 응답입니다.)",
+    "위치가 어디예요?": "하루헤어는 가상 매장입니다. 예시 주소: 광주광역시 광산구 가상로 1, 1층. 실제 매장이 아니니 방문하지 마세요. (모의 응답입니다.)",
+    "영업시간이 어떻게 돼요?": "예시 영업시간은 매일 10:00~20:00, 매주 월요일 휴무입니다. (가상 예시입니다.)",
+    "노쇼하면 어떻게 돼요?": "예약 당일 연락 없이 안 오시면 노쇼로 기록됩니다. 노쇼 방지를 위해 예약 전날 리마인드 문자를 보내드립니다. (모의 응답입니다.)",
+    "주차가 되나요?": "예시 안내: 건물 지하 주차장 이용 가능, 1시간 무료입니다. (가상 예시입니다.)"
+  };
+  var chat = document.getElementById("chat");
+  var chips = document.getElementById("chips");
+  Object.keys(answers).forEach(function(q) {
+    var b = document.createElement("button");
+    b.className = "chip";
+    b.textContent = q;
+    b.onclick = function() {
+      var u = document.createElement("div");
+      u.className = "msg user";
+      u.textContent = q;
+      chat.appendChild(u);
+      var a = document.createElement("div");
+      a.className = "msg bot";
+      a.textContent = answers[q];
+      chat.appendChild(a);
+    };
+    chips.appendChild(b);
+  });
+</script>
+</body>
+</html>
